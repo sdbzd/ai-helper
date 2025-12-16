@@ -1,0 +1,12 @@
+[package]
+name = "integration-ipc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+automation-engine = { path = "../automation-engine" }
+secure-vault = { path = "../secure-vault" }
+serde = { workspace = true }
+futures = { workspace = true }
+

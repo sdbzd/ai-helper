@@ -1,6 +1,6 @@
-//! Script recording, editing, and versioning skeleton.
+//! Script recording, editing, and versioning skeleton crate.
 
-use crate::automation::{LoginScript, Selector, Step, TargetApp};
+use automation_engine::{LoginScript, Selector, Step, TargetApp};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -95,7 +95,7 @@ pub struct ScriptVersion {
 /// Simple helper to build scripts programmatically.
 pub fn build_login_script(meta: (&str, &str), target: TargetApp, steps: Vec<Step>) -> LoginScript {
     LoginScript {
-        meta: crate::automation::ScriptMeta {
+        meta: automation_engine::ScriptMeta {
             id: meta.0.to_string(),
             version: meta.1.to_string(),
             author: None,

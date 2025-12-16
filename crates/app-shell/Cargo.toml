@@ -1,0 +1,15 @@
+[package]
+name = "app-shell"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+automation-engine = { path = "../automation-engine" }
+script-manager = { path = "../script-manager" }
+secure-vault = { path = "../secure-vault" }
+integration-ipc = { path = "../integration-ipc" }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+

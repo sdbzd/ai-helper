@@ -1,4 +1,4 @@
-//! Secure storage and key management skeleton.
+//! Secure storage and key management skeleton crate.
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -68,7 +68,7 @@ impl CredentialVault {
     }
 }
 
-/// Key provider abstraction to wrap Android Keystore / iOS Keychain.
+/// Key provider abstraction to wrap Android Keystore / platform key stores.
 pub trait KeyProvider {
     fn derive_key(&self, label: &str) -> Result<KeyHandle, VaultError>;
 

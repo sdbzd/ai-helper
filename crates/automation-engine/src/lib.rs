@@ -1,8 +1,5 @@
-//! Cross-platform UI automation engine skeleton.
-//!
-//! This module keeps the orchestration logic minimal but runnable so other
-//! components (IPC, script manager) have something concrete to call during
-//! early integration tests.
+//! Cross-platform (web + Android) UI automation engine skeleton.
+//! Provides abstractions for drivers, captcha handling, and login script model.
 
 mod types;
 pub use types::*;
@@ -45,11 +42,7 @@ impl AutomationEngine {
     /// no-op captcha handler. This keeps the engine usable out-of-the-box.
     pub fn with_defaults() -> Self {
         Self {
-            drivers: vec![
-                Arc::new(WebDriverStub),
-                Arc::new(AndroidDriverStub),
-                Arc::new(IosDriverStub),
-            ],
+            drivers: vec![Arc::new(WebDriverStub), Arc::new(AndroidDriverStub)],
             captcha: Arc::new(NoopCaptcha),
         }
     }
@@ -69,11 +62,14 @@ impl AutomationEngine {
                     .map_err(|err| anyhow::anyhow!("driver {} failed: {err}", driver.name()));
             }
         }
-        Err(anyhow::anyhow!("no suitable driver found for {:?}", script.target.kind))
+        Err(anyhow::anyhow!(
+            "no suitable driver found for {:?}",
+            script.target.kind
+        ))
     }
 }
 
-/// Driver interface for a platform (web / android / ios).
+/// Driver interface for a platform (web / android).
 #[async_trait]
 pub trait AutomationDriver {
     fn name(&self) -> &'static str;
@@ -123,7 +119,7 @@ impl AutomationDriver for WebDriverStub {
     }
 
     fn supports(&self, target: &TargetApp) -> bool {
-        matches!(target.kind, TargetAppKind::Web | TargetAppKind::Hybrid)
+        matches!(target.kind, TargetAppKind::Web)
     }
 
     async fn execute(
@@ -145,7 +141,7 @@ impl AutomationDriver for AndroidDriverStub {
     }
 
     fn supports(&self, target: &TargetApp) -> bool {
-        matches!(target.kind, TargetAppKind::Android | TargetAppKind::Hybrid)
+        matches!(target.kind, TargetAppKind::Android)
     }
 
     async fn execute(
@@ -154,28 +150,6 @@ impl AutomationDriver for AndroidDriverStub {
         captcha: &dyn CaptchaHandler,
     ) -> anyhow::Result<LoginOutcome> {
         simulate_steps("android", &script, captcha).await
-    }
-}
-
-/// Stub for iOS automation.
-pub struct IosDriverStub;
-
-#[async_trait]
-impl AutomationDriver for IosDriverStub {
-    fn name(&self) -> &'static str {
-        "ios-stub"
-    }
-
-    fn supports(&self, target: &TargetApp) -> bool {
-        matches!(target.kind, TargetAppKind::Ios | TargetAppKind::Hybrid)
-    }
-
-    async fn execute(
-        &self,
-        script: LoginScript,
-        captcha: &dyn CaptchaHandler,
-    ) -> anyhow::Result<LoginOutcome> {
-        simulate_steps("ios", &script, captcha).await
     }
 }
 

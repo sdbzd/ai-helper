@@ -1,20 +1,25 @@
-[package]
-name = "ai-helper"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = [
+    "crates/automation-engine",
+    "crates/script-manager",
+    "crates/secure-vault",
+    "crates/integration-ipc",
+    "crates/app-shell",
+]
+resolver = "2"
 
-[dependencies]
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
+
+[workspace.dependencies]
 anyhow = "1"
 async-trait = "0.1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 thiserror = "1"
-
-[features]
-# Placeholder feature flags to toggle implementations (e.g., "tauri", "android", "ios").
-default = []
-tauri = []
-android = []
-ios = []
+tracing = "0.1"
+futures = "0.3"
+tracing-subscriber = "0.3"
 
